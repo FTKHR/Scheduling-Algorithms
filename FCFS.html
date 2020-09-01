@@ -1,0 +1,108 @@
+<html>
+    <head>
+        <title>
+            FCFS Scheduling
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="FCFS.js"></script>
+        <script src="arrayToTable.js"></script>
+        
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td>Arrival time</td>
+                <td><input type="number"id='AT1'></td>
+                <td><span id="error2" style="color: red;"></span></td>
+                <td rowspan="2"><button name="Add" id="btnAddProc">Add</button></td>
+            </tr>
+            <tr>
+                <td>Burst time</td>
+                <td><input type="number"id='BT1'></td>
+                <td><span id="error" style="color: red;"></span></td>
+            </tr>
+        </table>
+        <table id="UserInput">
+            <tr>
+                <th>Process</th>
+                <th>Arrival Time</th>
+                <th>Burst Time</th>
+            </tr>
+        </table>
+        <script>
+            var lineNo = 1;
+            var lineNo2 = 1;
+            $(document).ready(function(){
+                $('#BtnCal').hide();
+                var BT =[];
+                var AT =[];
+                var Procs = [];
+                var TD =[];
+                var BT1 ;
+                var AT1 ;
+                var error1 = false;
+                var error2 = false;
+                $('#btnAddProc').click(function(){
+                    
+                    BT1 = $('#BT1').val();
+                    AT1 = $('#AT1').val();
+                    if(BT1=="" || BT1<1){
+                        $('#error').html("Value cannot be null or 0");
+                        error1 = true;
+                    }
+                    else{
+                        //BT.push(BT1);
+                        $('#error').html("");
+                        
+                        error1 = false;
+                    }
+                    if(AT1=="" || AT1<0){
+                        $('#error2').html("Value cannot be null or less than 0");
+                        error2 = true;
+                    }
+                    else{
+                        //BT.push(BT1);
+                        $('#error2').html("");
+                        
+                        error2 = false;
+                    }
+                    AT.forEach(element=>{
+                        if(element!=AT1){
+                            if(element > AT1){
+                                error2 = true;
+                                $('#error2').html("Please add the processes with with correct time sorting");
+                            }
+                        } 
+                    });
+                    if(!error1 && !error2){
+                        $('#BtnCal').show();
+                        BT1= parseInt(BT1);
+                        AT1= parseInt(AT1);
+                        BT.push(BT1);
+                        AT.push(AT1);
+                        Procs.push('P-'+Procs.length);
+                        $('#BT1').val("");
+                        $('#AT1').val("");
+                        markup = "<tr><td>" +'P-'+Procs.length + "</td> <td>"+AT1+"</td><td>"+BT1+"</td></tr>"; 
+                        tableBody = $("#UserInput"); 
+                        tableBody.append(markup); 
+                        lineNo++;   
+                    }    
+                }); 
+                $('#BtnCal').click(function(){
+                    var processes = FCFS(AT,BT);
+                    processes.unshift(['Process Number','Arrival Time','Burst Time','Completion time','Turn around Time','Waiting Time']);
+                    var table = arrayToTable(processes, {
+                        thead: true,
+                        th:true,
+                        attrs: {border:1}
+                    })
+                    tableBody = $("#calculated"); 
+                    $('body').append(table);
+                });
+            });
+            
+        </script>
+        <button id="BtnCal">Calculate</button> 
+    </body>
+</html>
